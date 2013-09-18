@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class Huflactron {
 
-	static String[][] actions = {
+	private static final String[][] actions = {
 			{"addItem",
 			"Add an item to the shopping basket"},
 			{"viewBasket",
@@ -22,15 +22,15 @@ public class Huflactron {
 			"Remove item"}
 	};
 
-	static int SIZE = 5;
-	static String[] itemNames = {"Broken computer", "Cookie", "Unknown video game", "Modern art", "Useless button"};
-	static int[] itemPrices = {40, 3, 25, 80, 10};
+	private static final int SIZE = 5;
+	private static final String[] itemNames = {"Broken computer", "Cookie", "Unknown video game", "Modern art", "Useless button"};
+	private static final int[] itemPrices = {40, 3, 25, 80, 10};
 
 	// Basket class
 	static public class Basket {
 
 		// Items in basket
-		int[][] items = new int[SIZE][2];
+		final int[][] items = new int[SIZE][2];
 
 		// Proper constructor
 		Basket() {
@@ -83,7 +83,7 @@ public class Huflactron {
 		// Adds item to basket
 		public void addItem(int itemID) {
 			int amount = 0;
-			boolean goodToGo = false;
+			boolean goodToGo;
 			Scanner myScanner = new Scanner(System.in);
 
 			do {
@@ -93,23 +93,19 @@ public class Huflactron {
 					amount = myScanner.nextInt();
 
 					// Check if entered value is asked
-					if(amount > 0)
-						goodToGo = true;
-					else
-						goodToGo = false;
+					goodToGo = amount > 0;
 				} catch (InputMismatchException exception) {
 					goodToGo = false;
 				}
 			} while (!goodToGo);
 
 			items[itemID][1] += amount;
-			return;
 		}
 
 		// Remove item from basket
 		public void removeItem(int itemID) {
 			int amount = 0;
-			boolean goodToGo = false;
+			boolean goodToGo;
 			Scanner myScanner = new Scanner(System.in);
 
 			do {
@@ -119,38 +115,34 @@ public class Huflactron {
 					amount = myScanner.nextInt();
 
 					// Check if entered value is asked
-					if(amount > 0 && amount <= items[itemID][1])
-						goodToGo = true;
-					else
-						goodToGo = false;
+					goodToGo = amount > 0 && amount <= items[itemID][1];
 				} catch (InputMismatchException exception) {
 					goodToGo = false;
 				}
 			} while (!goodToGo);
 
 			items[itemID][1] -= amount;
-			return;
 		}
 	}
 
-	static Basket myBasket = new Basket();
-	static boolean canExit = false;
+	private static final Basket myBasket = new Basket();
+	private static boolean canExit = false;
 
 	// Output helper function
-	public static void output(boolean doEndLine, String toOutput) {
-		if(doEndLine == true)
+	private static void output(boolean doEndLine, String toOutput) {
+		if(doEndLine)
 			System.out.println(toOutput);
 		else
 			System.out.print(toOutput);
 	}
 
 	// Checking how much items inside basket
-	public static void checkBasket() {
+	private static void checkBasket() {
 		output(true, "Welcome customer. You currently have " + myBasket.size() + " items in your shopping basket.");
 	}
 
 	// Returns text for action code
-	public static String getActionText(String action) {
+	private static String getActionText(String action) {
 		for(String[] actionBlock : actions) {
 			if(actionBlock[0].equals(action))
 				return actionBlock[1];
@@ -159,9 +151,8 @@ public class Huflactron {
 	}
 
 	// Asks what to do
-	public static int askAction(String... actionsOnLevel) {
-		int i = 0, choise = 0;
-		String choiseAction = "";
+	private static int askAction(String... actionsOnLevel) {
+		int i, choise = 0;
 		boolean goodToGo = false;
 		Scanner myScanner = new Scanner(System.in);
 
@@ -197,7 +188,7 @@ public class Huflactron {
 
 	// Main function
 	public static void main(String[] args) {
-		int choise = -1;
+		int choise;
 		do {
 			output(true, "");
 			checkBasket();
@@ -222,8 +213,8 @@ public class Huflactron {
 	}
 
 	// Adds item to basket
-	public static void addItem() {
-		int i = 0, choise = -1, amount = 0;
+	private static void addItem() {
+		int i, choise = -1;
 		boolean goodToGo = false;
 		Scanner myScanner = new Scanner(System.in);
 
@@ -257,13 +248,12 @@ public class Huflactron {
 			myBasket.addItem(choise);
 		}
 
-		return;
 	}
 
 	// View basket and choise next action
-	public static void viewBasket() {
-		int choise = -1;
-		boolean isNotEmpty = false;
+	private static void viewBasket() {
+		int choise;
+		boolean isNotEmpty;
 
 		do {
 			output(true, "");
@@ -295,8 +285,8 @@ public class Huflactron {
 	}
 
 	// Removes item from basket
-	public static void removeItem() {
-		int i = 0, q = 0, choise = -1, amount = 0;
+	private static void removeItem() {
+		int i, q, choise = -1;
 		boolean goodToGo = false;
 		Scanner myScanner = new Scanner(System.in);
 
@@ -347,11 +337,10 @@ public class Huflactron {
 			myBasket.removeItem(choise);
 		}
 
-		return;
 	}
 
 	// Pay and exit
-	public static void pay() {
+	private static void pay() {
 		while(myBasket.price() > 100) {
 			output(true, "Your basket is too expensive - $" + myBasket.price() + ".");
 			removeItem();
@@ -361,7 +350,5 @@ public class Huflactron {
 		output(true, "You payed $" + myBasket.price() + " for your items and therefore have $" + left + " left.");
 		output(true, "You bought the following items:");
 		myBasket.viewItems();
-
-		return;
 	}
 }
