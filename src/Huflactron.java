@@ -229,6 +229,7 @@ public class Huflactron {
 
 		// Loop for derpy input
 		do {
+			i = 0;
 			output(true, "What would you like to add to your shopping basket?");
 			for(String name : itemNames) {
 				output(true, i+1 + ". " + name + " $" + itemPrices[i]);
@@ -301,10 +302,11 @@ public class Huflactron {
 
 		// Loop for derpy input
 		do {
+			i = q = 0;
 			output(true, "What item would you like to remove?");
 			for(String name : itemNames) {
 				if(myBasket.items[i][1] != 0) {
-					output(true, q+1 + "." + i + " " + name + " $" + itemPrices[i]);
+					output(true, q+1 + ". " + name + " $" + itemPrices[i]);
 					q++;
 				}
 				i++;
