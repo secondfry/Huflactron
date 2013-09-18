@@ -12,26 +12,26 @@ public class Card implements Comparable<Card> {
 	String ownage;
 
 	private static final String[] cardNames = {
-		"Ace",
-		"Two",
-		"Three",
-		"Four",
-		"Five",
-		"Six",
-		"Seven",
-		"Eight",
-		"Nine",
-		"Ten",
-		"Jack",
-		"Queen",
-		"King"
+			"Ace",
+			"Two",
+			"Three",
+			"Four",
+			"Five",
+			"Six",
+			"Seven",
+			"Eight",
+			"Nine",
+			"Ten",
+			"Jack",
+			"Queen",
+			"King"
 	};
 
 	private static final String[] cardSuits = {
-		"Clubs",
-		"Diamonds",
-		"Hearts",
-		"Spades"
+			"Clubs",
+			"Diamonds",
+			"Hearts",
+			"Spades"
 	};
 
 

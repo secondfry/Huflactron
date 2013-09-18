@@ -25,7 +25,7 @@ public class Deck implements ICardHolder {
 
 	public void takeCards() {
 		int i = 0;
-		while(i < 4) {
+		while (i < 4) {
 			cards.add(onTable.get(0));
 			onTable.remove(0);
 			i++;
@@ -41,7 +41,7 @@ public class Deck implements ICardHolder {
 	Deck() {
 		int i = 0;
 
-		while(i < 13) {
+		while (i < 13) {
 			cards.add(new Card(ECardSuits.CLUBS, i));
 			cards.add(new Card(ECardSuits.DIAMONDS, i));
 			cards.add(new Card(ECardSuits.HEARTS, i));

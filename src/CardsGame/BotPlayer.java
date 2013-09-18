@@ -21,15 +21,18 @@ public class BotPlayer extends abstractPlayer {
 
 	@Override
 	public void giveCardTo() {
-		Deck myDeck = CardsGame.myDeck;
+		if (!roundDone) {
+			Deck myDeck = CardsGame.myDeck;
 
-		Random myRandom = new Random();
-		int choise = myRandom.nextInt(5);
+			Random myRandom = new Random();
+			int choise = myRandom.nextInt(5);
 
-		output("Bot " + botID + " played " + getCardAt(choise).getTextOfCard());
+			output("Bot " + botID + " played " + getCardAt(choise).getTextOfCard());
 
-		myDeck.onTable.add(getCardAt(choise));
-		cards.remove(choise);
+			myDeck.onTable.add(getCardAt(choise));
+			cards.remove(choise);
+			roundDone = true;
+		}
 	}
 
 	@Override
@@ -44,6 +47,7 @@ public class BotPlayer extends abstractPlayer {
 		myDeck.getCardAt(0).ownage = "Bot " + botID;
 		cards.add(myDeck.getCardAt(0));
 		Deck.cards.remove(0);
+		roundDone = false;
 	}
 
 }

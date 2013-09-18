@@ -10,7 +10,8 @@ import java.util.ArrayList;
 public abstract class abstractPlayer implements ICardHolder {
 
 	final ArrayList<Card> cards = new ArrayList<Card>();
-	final int score = 0;
+	int score = 0;
+	boolean roundDone = false;
 
 	@Override
 	public int getCardsAmount() {
@@ -34,7 +35,7 @@ public abstract class abstractPlayer implements ICardHolder {
 		int i = 0;
 		String temp = "Your cards are the following";
 
-		while(i < 5) {
+		while (i < 5) {
 			temp += "\n" + (i + 1) + ". " + getCardAt(i).getTextOfCard();
 			i++;
 		}

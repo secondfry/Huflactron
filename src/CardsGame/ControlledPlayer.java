@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class ControlledPlayer extends abstractPlayer {
 
 	private static void output(boolean doEndLine, String toOutput) {
-		if(doEndLine)
+		if (doEndLine)
 			System.out.println(toOutput);
 		else
 			System.out.print(toOutput);
@@ -19,30 +19,39 @@ public class ControlledPlayer extends abstractPlayer {
 
 	@Override
 	public void giveCardTo() {
-		Deck myDeck = CardsGame.myDeck;
+		if (!roundDone) {
+			Deck myDeck = CardsGame.myDeck;
 
-		int choise = -1;
-		Scanner myScanner = new Scanner(System.in);
-		boolean goodToGo;
+			int choise = -1;
+			Scanner myScanner = new Scanner(System.in);
+			boolean goodToGo;
 
-		output(true, "It's your time to play, please pick a card.");
-		output(false, "> ");
+			do {
+				output(true, "It's your time to play, please pick a card. 6: Exit.");
+				output(false, "> ");
 
-		do {
-			try {
-				choise = myScanner.nextInt();
-				choise--;
-				goodToGo = choise > -1 && choise < 5;
-			} catch (InputMismatchException exception) {
-				goodToGo = false;
+				try {
+					choise = myScanner.nextInt();
+					choise--;
+					goodToGo = choise > -1 && choise < 6;
+				} catch (InputMismatchException exception) {
+					goodToGo = false;
+				}
+			} while (!goodToGo);
+
+			if (choise == 5) {
+				CardsGame.doEndGame = true;
+				roundDone = true;
+				return;
 			}
-		} while(!goodToGo);
 
-		output(true, "You played " + getCardAt(choise).getTextOfCard());
+			output(true, "");
+			output(true, "You played " + getCardAt(choise).getTextOfCard());
 
-		myDeck.onTable.add(getCardAt(choise));
-		cards.remove(choise);
-
+			myDeck.onTable.add(getCardAt(choise));
+			cards.remove(choise);
+			roundDone = true;
+		}
 	}
 
 	@Override
@@ -57,5 +66,6 @@ public class ControlledPlayer extends abstractPlayer {
 		myDeck.getCardAt(0).ownage = "Player";
 		cards.add(myDeck.getCardAt(0));
 		Deck.cards.remove(0);
+		roundDone = false;
 	}
 }
