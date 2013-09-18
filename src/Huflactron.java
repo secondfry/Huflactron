@@ -3,213 +3,363 @@
  * User: Rustam Second_Fry Gubaydullin
  * Date: 18.09.13 3:57
  */
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Random;
+
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Huflactron {
 
-    public static void output(String toOutput) {
-        System.out.println(toOutput);
-    }
+	static String[][] actions = {
+			{"addItem",
+			"Add an item to the shopping basket"},
+			{"viewBasket",
+			"View the content of the shopping basket"},
+			{"pay",
+			"Pay and exit the shop"},
+			{"back",
+			"Go back"},
+			{"removeItem",
+			"Remove item"}
+	};
 
-    public static void lecture1() {
-        Scanner myScanner;
-        String firstInput;
-        String secondInput;
-        int firstInt;
+	static int SIZE = 5;
+	static String[] itemNames = {"Broken computer", "Cookie", "Unknown video game", "Modern art", "Useless button"};
+	static int[] itemPrices = {40, 3, 25, 80, 10};
 
-        // Simple output
-        System.out.println("Hello, Huflactron!");
-        System.out.println("Enter string and integer, man.");
+	// Basket class
+	static public class Basket {
 
-        //Simple input
-        myScanner = new Scanner(System.in);
-        firstInput = myScanner.next();
-        secondInput = myScanner.next();
-        try {
-            firstInt = Integer.parseInt(secondInput);
-        } catch (java.lang.NumberFormatException exception) {
-            output("Dont try to fool me!");
-            firstInt = 0;
-        }
+		// Items in basket
+		int[][] items = new int[SIZE][2];
 
-        // Output simple input
-        System.out.println(firstInput + " : " + firstInt);
-    }
+		// Proper constructor
+		Basket() {
+			int i = 0;
+			while(i < SIZE) {
+				items[i][0] = i;
+				items[i][1] = 0;
+				i++;
+			}
+		}
 
-    public static boolean lecture2_check(int toCheck) {
-        return toCheck > 0 && toCheck < 14;
-    }
+		// Count items
+		public int size() {
+			int i = 0, size = 0;
+			while(i < SIZE) {
+				size += items[i][1];
+				i++;
+			}
+			return size;
+		}
 
-    public static void lecture2() {
-        int a1, a2, a3, operation, a4;
-        boolean q1, q2, q3, x1, x2, x3;
-        Scanner myScanner;
-        Random myRandom;
+		// Count price
+		public int price() {
+			int i = 0, price = 0;
+			while(i < SIZE) {
+				price += items[i][1] * itemPrices[i];
+				i++;
+			}
+			return price;
+		}
 
-        // Comment to user
-        System.out.println("Hello, Huflactron!\nChoose 3 cards by it integer value (from 1 to 13)");
+		// Export items
+		// Returns true if items exist, false - if not
+		public boolean viewItems() {
+			int i = 0;
+			if(this.size() == 0) {
+				output(true, "Your shopping basket is empty.");
+				return false;
+			}
+			else {
+				while(i < SIZE) {
+					if(items[i][1] != 0)
+						output(true, itemNames[i] + " [" + items[i][1] + "]");
+					i++;
+				}
+				return true;
+			}
+		}
 
-        // Read input
-        myScanner = new Scanner(System.in);
-        try {
-            a1 = myScanner.nextInt();
-            a2 = myScanner.nextInt();
-            a3 = myScanner.nextInt();
-        } catch (java.util.InputMismatchException exception) {
-            output("Dont try to fool me!");
-            a1 = 1;
-            a2 = 2;
-            a3 = 3;
-        }
+		// Adds item to basket
+		public void addItem(int itemID) {
+			int amount = 0;
+			boolean goodToGo = false;
+			Scanner myScanner = new Scanner(System.in);
 
-        // Check if cards actually
-        if(!lecture2_check(a1)) {
-            output("Dont try to fool me!");
-            a1 = 1;
-        }
-        if(!lecture2_check(a2)) {
-            output("Dont try to fool me!");
-            a2 = 2;
-        }
-        if(!lecture2_check(a3)) {
-            output("Dont try to fool me!");
-            a3 = 3;
-        }
+			do {
+				output(true, itemNames[itemID] + " costs $" + itemPrices[itemID] + ". How many would you like?");
+				output(false, "> ");
+				try {
+					amount = myScanner.nextInt();
 
-        // Math is saving our day
-        output("BTW maximum is: " + Math.max(Math.max(a1, a2), a3));
+					// Check if entered value is asked
+					if(amount > 0)
+						goodToGo = true;
+					else
+						goodToGo = false;
+				} catch (InputMismatchException exception) {
+					goodToGo = false;
+				}
+			} while (!goodToGo);
 
-        // XOR
-        x1 = true;
-        x2 = false;
-        x3 = (x1 && !x2) || (!x1 && x2);
-        output("Sick: " + x3);
+			items[itemID][1] += amount;
+			return;
+		}
 
-        // Check pairs
-        q1 = a1 == a2;
-        q2 = a2 == a3;
-        q3 = a3 == a1;
-        if(q1 && q2) {
-            output("You got three-of-a-kind " + a1 + ", lal!");
-        } else if(q1) {
-            output("You got pair " + a1 + ", lal!");
-        } else if(q2) {
-            output("You got pair " + a2 + ", lal!");
-        } else if(q3) {
-            output("You got pair " + a3 + ", lal!");
-        } else {
-            output("Dont play anymore.");
-        }
+		// Remove item from basket
+		public void removeItem(int itemID) {
+			int amount = 0;
+			boolean goodToGo = false;
+			Scanner myScanner = new Scanner(System.in);
 
-        // Now math
-        output("We need to check if you are adult. Solve this:");
-        myRandom = new Random();
-        operation = myRandom.nextInt(5);
-        a1 = myRandom.nextInt(10);
-        a2 = myRandom.nextInt(10);
-        switch(operation) {
-            case 0:
-                output(a1 + " + " + a2 + " ? ");
-                a3 = a1 + a2;
-                break;
-            case 1:
-                output(a1 + " - " + a2 + " ? ");
-                a3 = a1 - a2;
-                break;
-            case 2:
-                output(a1 + " * " + a2 + " ? ");
-                a3 = a1 * a2;
-                break;
-            case 3:
-                while(a2 == 0) {
-                    a2 = myRandom.nextInt(10);
-                }
-                output(a1 + " / " + a2 + " ? ");
-                a3 = a1 / a2;
-                break;
-            case 4:
-                output(a1 + " % " + a2 + " ? ");
-                a3 = a1 % a2;
-                break;
-        }
+			do {
+				output(true, "How many? [" + items[itemID][1] + "]");
+				output(false, "> ");
+				try {
+					amount = myScanner.nextInt();
 
-        try {
-            a4 = myScanner.nextInt();
-            if(a3 == a4) {
-                output("Good job! You are adult.");
-            } else {
-                output("Dumb? Result is " + a3 + " and not " + a4);
-            }
-        } catch (java.util.InputMismatchException exception) {
-            output("Dont try to fool me! And go away.");
-        }
-    }
+					// Check if entered value is asked
+					if(amount > 0 && amount <= items[itemID][1])
+						goodToGo = true;
+					else
+						goodToGo = false;
+				} catch (InputMismatchException exception) {
+					goodToGo = false;
+				}
+			} while (!goodToGo);
 
-    public static void lecture3_part1() {
-        int i = 0;
-        Scanner myScanner = new Scanner(System.in);
-        int[] intArray = new int[10];
+			items[itemID][1] -= amount;
+			return;
+		}
+	}
 
-        output("Input 10 integers.");
-        while(i < 10) {
-            intArray[i] = myScanner.nextInt();
-            i++;
-        }
+	static Basket myBasket = new Basket();
+	static boolean canExit = false;
 
-        Arrays.sort(intArray);
+	// Output helper function
+	public static void output(boolean doEndLine, String toOutput) {
+		if(doEndLine == true)
+			System.out.println(toOutput);
+		else
+			System.out.print(toOutput);
+	}
 
-        output("Sick array:");
-        for(int a : intArray) {
-            output("" + a);
-        }
-    }
+	// Checking how much items inside basket
+	public static void checkBasket() {
+		output(true, "Welcome customer. You currently have " + myBasket.size() + " items in your shopping basket.");
+	}
 
-    public static void lecture3_part2(String[] args) {
-        String name = "", pass = "";
-        boolean doName = false, doPass = false;
-        Scanner myScanner = new Scanner(System.in);
+	// Returns text for action code
+	public static String getActionText(String action) {
+		for(String[] actionBlock : actions) {
+			if(actionBlock[0].equals(action))
+				return actionBlock[1];
+		}
+		return "Dunno";
+	}
 
-        for(String arg : args) {
-            if(doName) {
-                name = arg;
-                doName = false;
-            }
-            if(doPass) {
-                pass = arg;
-                doPass = false;
-            }
-            if(arg.equals("name")) {
-                doName = true;
-            }
-            if(arg.equals("pass")) {
-                doPass = true;
-            }
-        }
+	// Asks what to do
+	public static int askAction(String... actionsOnLevel) {
+		int i = 0, choise = 0;
+		String choiseAction = "";
+		boolean goodToGo = false;
+		Scanner myScanner = new Scanner(System.in);
 
-        if(name.length() == 0) {
-            output("Enter username:");
-            name = myScanner.next();
-        }
+		// Loop for derpy input
+		do {
+			output(true, "What would you like to do?");
 
-        if(pass.length() == 0) {
-            output("Enter password:");
-            pass = myScanner.next();
-        }
+			i = 0;
+			for(String action : actionsOnLevel) {
+				output(true, i+1 + ". " + getActionText(action));
+				i++;
+			}
 
-        output(name + ":" + pass);
-    }
+			output(false, "> ");
+			try {
+				choise = myScanner.nextInt();
 
-    public static void lecture3(String[] args) {
-//        lecture3_part1();
-        lecture3_part2(args);
-    }
+				// Human start from 1 and developer start from 0
+				choise--;
 
-    public static void main(String[] args) {
-//        lecture1();
-//        lecture2();
-//        lecture3(args);
-    }
+				// Check if entered value is asked
+				if(choise > -1 && choise < actionsOnLevel.length)
+					goodToGo = true;
+			} catch (InputMismatchException exception) {
+				goodToGo = false;
+			}
+		} while (!goodToGo);
+
+//		There is no switch over String in Java? T_T
+//		return actions[choise][0];
+		return choise;
+	}
+
+	// Main function
+	public static void main(String[] args) {
+		int choise = -1;
+		do {
+			output(true, "");
+			checkBasket();
+			choise = askAction("addItem","viewBasket","pay");
+			switch(choise) {
+//				case "addItem":
+				case 0:
+					output(true, "");
+					addItem();
+					break;
+//				case "viewBasket":
+				case 1:
+					viewBasket();
+					break;
+				case 2:
+					output(true, "");
+					pay();
+					canExit = true;
+					break;
+			}
+		} while (!canExit);
+	}
+
+	// Adds item to basket
+	public static void addItem() {
+		int i = 0, choise = -1, amount = 0;
+		boolean goodToGo = false;
+		Scanner myScanner = new Scanner(System.in);
+
+		// Loop for derpy input
+		do {
+			output(true, "What would you like to add to your shopping basket?");
+			for(String name : itemNames) {
+				output(true, i+1 + ". " + name + " $" + itemPrices[i]);
+				i++;
+			}
+			output(true, i+1 + ". Go back");
+
+			output(false, "> ");
+			try {
+				choise = myScanner.nextInt();
+
+				// Human start from 1 and developer start from 0
+				choise--;
+
+				// Check if entered value is asked
+				if(choise > -1 && choise <= SIZE)
+					goodToGo = true;
+			} catch (InputMismatchException exception) {
+				goodToGo = false;
+			}
+		} while (!goodToGo);
+
+		if(choise != i) {
+			output(true, "");
+			myBasket.addItem(choise);
+		}
+
+		return;
+	}
+
+	// View basket and choise next action
+	public static void viewBasket() {
+		int choise = -1;
+		boolean isNotEmpty = false;
+
+		do {
+			output(true, "");
+			output(true, "Items in shopping basket:");
+			isNotEmpty = myBasket.viewItems();
+			output(true, "");
+			if(isNotEmpty) {
+				choise = askAction("removeItem","back");
+				switch(choise) {
+//					case "removeItem":
+					case 0:
+						output(true, "");
+						removeItem();
+						break;
+//					case "back":
+					case 1:
+						return;
+				}
+			}
+			else {
+				choise = askAction("back");
+				switch(choise) {
+//					case "back":
+					case 0:
+						return;
+				}
+			}
+		} while (true);
+	}
+
+	// Removes item from basket
+	public static void removeItem() {
+		int i = 0, q = 0, choise = -1, amount = 0;
+		boolean goodToGo = false;
+		Scanner myScanner = new Scanner(System.in);
+
+		// Loop for derpy input
+		do {
+			output(true, "What item would you like to remove?");
+			for(String name : itemNames) {
+				if(myBasket.items[i][1] != 0) {
+					output(true, q+1 + "." + i + " " + name + " $" + itemPrices[i]);
+					q++;
+				}
+				i++;
+			}
+			output(true, q+1 + ". Go back");
+
+			output(false, "> ");
+			try {
+				choise = myScanner.nextInt();
+
+				// Human start from 1 and developer start from 0
+				choise--;
+
+				// Check if entered value is asked
+				if(choise > -1 && choise <= q)
+					goodToGo = true;
+			} catch (InputMismatchException exception) {
+				goodToGo = false;
+			}
+		} while (!goodToGo);
+
+		if(choise != q) {
+			output(true, "");
+
+			i = 0;
+			q = 0;
+			while(i < SIZE) {
+				if(myBasket.items[i][1] != 0) {
+					if(choise == q) {
+						choise = i;
+						break;
+                    }
+					q++;
+				}
+				i++;
+			}
+
+			myBasket.removeItem(choise);
+		}
+
+		return;
+	}
+
+	// Pay and exit
+	public static void pay() {
+		while(myBasket.price() > 100) {
+			output(true, "Your basket is too expensive - $" + myBasket.price() + ".");
+			removeItem();
+		}
+
+		int left = 100-myBasket.price();
+		output(true, "You payed $" + myBasket.price() + " for your items and therefore have $" + left + " left.");
+		output(true, "You bought the following items:");
+		myBasket.viewItems();
+
+		return;
+	}
 }
