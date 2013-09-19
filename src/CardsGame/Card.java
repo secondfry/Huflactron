@@ -9,7 +9,7 @@ public class Card implements Comparable<Card> {
 
 	final ECardSuits suit;
 	private final int value;
-	String ownage;
+	abstractPlayer owner;
 
 	private static final String[] cardNames = {
 			"Ace",
@@ -38,29 +38,7 @@ public class Card implements Comparable<Card> {
 	Card(ECardSuits suit, int value) {
 		this.suit = suit;
 		this.value = value;
-		this.ownage = "";
 	}
-
-//	Card() {
-//		Random myRandom = new Random();
-//
-//		switch(myRandom.nextInt(4)) {
-//			case 0:
-//				this.suit = ECardSuits.CLUBS;
-//				break;
-//			case 1:
-//				this.suit = ECardSuits.DIAMONDS;
-//				break;
-//			case 2:
-//				this.suit = ECardSuits.HEARTS;
-//				break;
-//			case 3:
-//				this.suit = ECardSuits.SPADES;
-//				break;
-//		}
-//
-//		this.value = myRandom.nextInt(14);
-//	}
 
 	public String getTextOfCard() {
 		return cardNames[value] + " of " + cardSuits[ECardSuits.valueOf(suit.toString()).ordinal()];

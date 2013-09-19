@@ -10,11 +10,13 @@ import java.util.Collections;
  */
 public class CardsGame {
 
+	private static final String PCNames[] = {"Second_Fry", "Steve", "Alaneee"};
+	private static final ArrayList<ControlledPlayer> PCs = new ArrayList<ControlledPlayer>();
+	private static final String NPCNames[] = {"Crazy", "Wicked", "Normal"};
+	private static final ArrayList<BotPlayer> NPCs = new ArrayList<BotPlayer>();
+//	private static final int NUMBER_OF_PLAYERS = 6;
+
 	static final Deck myDeck = new Deck();
-	private static final ControlledPlayer player = new ControlledPlayer();
-	private static final BotPlayer bot1 = new BotPlayer(1);
-	private static final BotPlayer bot2 = new BotPlayer(2);
-	private static final BotPlayer bot3 = new BotPlayer(3);
 	private static int roundID = 1;
 	static boolean doEndGame = false;
 
@@ -22,35 +24,63 @@ public class CardsGame {
 		System.out.println(toOutput);
 	}
 
-	private static abstractPlayer startRound(abstractPlayer whoFirst) {
-		ArrayList<Card> temp = new ArrayList<Card>();
-
-		output("Round number " + roundID);
-		output(player.getScore());
-		output(bot1.getScore());
-		output(bot2.getScore());
-		output(bot3.getScore());
-
-		if (roundID == 1) {
-			for (int i = 0; i < 5; i++) {
-				player.takeCard();
-				bot1.takeCard();
-				bot2.takeCard();
-				bot3.takeCard();
-			}
+	private static void outputScores() {
+		int i = 0;
+		while(i < PCs.size()) {
+			output(PCs.get(i++).getScore());
 		}
 
-		output("");
-		output(player.getCardsText());
+		i = 0;
+		while(i < NPCs.size()) {
+			output(NPCs.get(i++).getScore());
+		}
+	}
 
-		output("");
-		whoFirst.giveCardTo();
-		player.giveCardTo();
+	private static void allTakeCards() {
+		int i = 0, q, cardAmount;
+
+		if (roundID == 1)
+			cardAmount = 5;
+		else
+			cardAmount = 1;
+
+		while(i < PCs.size()) {
+			q = 0;
+			while(q < cardAmount) {
+				PCs.get(i).takeCard();
+				q++;
+			}
+			i++;
+		}
+
+		i = 0;
+		while(i < NPCs.size()) {
+			q = 0;
+			while(q < cardAmount) {
+				NPCs.get(i).takeCard();
+				q++;
+			}
+			i++;
+		}
+	}
+
+	private static void makeStep(abstractPlayer nowPlaying) {
+
+		output("----------------");
+
+		if(nowPlaying instanceof ControlledPlayer) {
+			output(nowPlaying.getCardsText());
+		}
+
 		if (doEndGame)
-			return player;
-		bot1.giveCardTo();
-		bot2.giveCardTo();
-		bot3.giveCardTo();
+			return;
+
+		nowPlaying.giveCardTo();
+	}
+
+	private static abstractPlayer checkWin() {
+		abstractPlayer whoWon;
+		ArrayList<Card> temp = new ArrayList<Card>();
 
 		temp.add(myDeck.onTable.get(0));
 		for (int i = 1; i < 4; i++) {
@@ -60,44 +90,83 @@ public class CardsGame {
 
 		Collections.sort(temp);
 
-		switch (temp.get(0).ownage) {
-			case "Player":
-				player.score++;
-				whoFirst = player;
-				break;
-			case "Bot 1":
-				bot1.score++;
-				whoFirst = bot1;
-				break;
-			case "Bot 2":
-				bot2.score++;
-				whoFirst = bot2;
-				break;
-			case "Bot 3":
-				bot3.score++;
-				whoFirst = bot3;
-				break;
-		}
+		whoWon = temp.get(0).owner;
+		whoWon.score++;
 
 		temp.clear();
 
+		output("----------------");
+		output(whoWon.getName() + " won the round!");
+
+		return whoWon;
+	}
+
+	private static abstractPlayer startRound(abstractPlayer whoWon) {
+		abstractPlayer nowPlaying;
+
+		if(PCs.size() > 1) {
+			output("----------------");
+			output("This is hotseat game so be kind to others!");
+
+		}
+
+		output("----------------");
+		output("Round number " + roundID);
+		outputScores();
+
+		allTakeCards();
+
+		nowPlaying = whoWon;
+		do {
+			makeStep(nowPlaying);
+
+			if (doEndGame)
+				return nowPlaying;
+
+			nowPlaying = nowPlaying.nextPlayer;
+		} while (nowPlaying != whoWon);
+
+		whoWon = checkWin();
+
 		myDeck.takeCards();
 
-		player.takeCard();
-		bot1.takeCard();
-		bot2.takeCard();
-		bot3.takeCard();
-
-		return whoFirst;
+		return whoWon;
 	}
 
 	public static void main(String[] args) {
-		abstractPlayer whoFirst = player;
+
+		int i = 0;
+		for(String playerName : PCNames) {
+			PCs.add(new ControlledPlayer(playerName));
+
+			if(i != 0)
+				PCs.get(i-1).nextPlayer = PCs.get(i);
+
+			i++;
+		}
+
+		i = 0;
+		for(String playerName : NPCNames) {
+			NPCs.add(new BotPlayer(playerName));
+
+			if(i != 0)
+				NPCs.get(i-1).nextPlayer = NPCs.get(i);
+
+			i++;
+		}
+
+		PCs.get(PCs.size()-1).nextPlayer = NPCs.get(0);
+		NPCs.get(NPCs.size()-1).nextPlayer = PCs.get(0);
+
+		abstractPlayer whoWon = PCs.get(0);
+
 		do {
-			output("");
-			whoFirst = startRound(whoFirst);
+			whoWon = startRound(whoWon);
 			roundID++;
 		} while (!doEndGame);
+
+		output("");
+		output(whoWon.name + " decided to stop the game.");
 	}
 
 }

@@ -9,10 +9,8 @@ import java.util.Random;
  */
 public class BotPlayer extends abstractPlayer {
 
-	private final int botID;
-
-	BotPlayer(int botID) {
-		this.botID = botID;
+	BotPlayer(String name) {
+		super(name);
 	}
 
 	private static void output(String toOutput) {
@@ -27,7 +25,7 @@ public class BotPlayer extends abstractPlayer {
 			Random myRandom = new Random();
 			int choise = myRandom.nextInt(5);
 
-			output("Bot " + botID + " played " + getCardAt(choise).getTextOfCard());
+			output("[B] " + name + " played " + getCardAt(choise).getTextOfCard());
 
 			myDeck.onTable.add(getCardAt(choise));
 			cards.remove(choise);
@@ -36,15 +34,15 @@ public class BotPlayer extends abstractPlayer {
 	}
 
 	@Override
-	public String getScore() {
-		return "Bot " + botID + " has " + score + " points";
+	public String getName() {
+		return "[B] " + name;
 	}
 
 	@Override
 	public void takeCard() {
 		Deck myDeck = CardsGame.myDeck;
 
-		myDeck.getCardAt(0).ownage = "Bot " + botID;
+		myDeck.getCardAt(0).owner = this;
 		cards.add(myDeck.getCardAt(0));
 		Deck.cards.remove(0);
 		roundDone = false;

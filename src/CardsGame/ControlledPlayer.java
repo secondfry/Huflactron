@@ -10,6 +10,10 @@ import java.util.Scanner;
  */
 public class ControlledPlayer extends abstractPlayer {
 
+	ControlledPlayer(String name) {
+		super(name);
+	}
+
 	private static void output(boolean doEndLine, String toOutput) {
 		if (doEndLine)
 			System.out.println(toOutput);
@@ -45,8 +49,8 @@ public class ControlledPlayer extends abstractPlayer {
 				return;
 			}
 
-			output(true, "");
-			output(true, "You played " + getCardAt(choise).getTextOfCard());
+			output(true, "----------------");
+			output(true, name + " played " + getCardAt(choise).getTextOfCard());
 
 			myDeck.onTable.add(getCardAt(choise));
 			cards.remove(choise);
@@ -55,15 +59,10 @@ public class ControlledPlayer extends abstractPlayer {
 	}
 
 	@Override
-	public String getScore() {
-		return "Player has " + score + " points";
-	}
-
-	@Override
 	public void takeCard() {
 		Deck myDeck = CardsGame.myDeck;
 
-		myDeck.getCardAt(0).ownage = "Player";
+		myDeck.getCardAt(0).owner = this;
 		cards.add(myDeck.getCardAt(0));
 		Deck.cards.remove(0);
 		roundDone = false;

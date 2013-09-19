@@ -12,6 +12,12 @@ public abstract class abstractPlayer implements ICardHolder {
 	final ArrayList<Card> cards = new ArrayList<Card>();
 	int score = 0;
 	boolean roundDone = false;
+	String name;
+	abstractPlayer nextPlayer;
+
+	abstractPlayer(String name) {
+		this.name = name;
+	}
 
 	@Override
 	public int getCardsAmount() {
@@ -23,8 +29,12 @@ public abstract class abstractPlayer implements ICardHolder {
 		return cards.get(index);
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public String getScore() {
-		return score + " points";
+		return getName() + " has " + score + " points";
 	}
 
 	public abstract void giveCardTo();
@@ -33,11 +43,10 @@ public abstract class abstractPlayer implements ICardHolder {
 
 	public String getCardsText() {
 		int i = 0;
-		String temp = "Your cards are the following";
+		String temp = name + " cards are the following";
 
 		while (i < 5) {
-			temp += "\n" + (i + 1) + ". " + getCardAt(i).getTextOfCard();
-			i++;
+			temp += "\n" + (i + 1) + ". " + getCardAt(i++).getTextOfCard();
 		}
 
 		return temp;
