@@ -9,9 +9,8 @@ import java.util.ArrayList;
  */
 public abstract class abstractPlayer implements ICardHolder {
 
-	final ArrayList<Card> cards = new ArrayList<Card>();
+	final ArrayList<Card> cards = new ArrayList<>();
 	int score = 0;
-	boolean roundDone = false;
 	String name;
 	abstractPlayer nextPlayer;
 
@@ -39,17 +38,18 @@ public abstract class abstractPlayer implements ICardHolder {
 
 	public abstract void giveCardTo();
 
-	public abstract void takeCard();
-
-	public String getCardsText() {
+	public void takeCard(int cardAmount) {
 		int i = 0;
-		String temp = name + " cards are the following";
+		Deck myDeck = CardsGame.myDeck;
 
-		while (i < 5) {
-			temp += "\n" + (i + 1) + ". " + getCardAt(i++).getTextOfCard();
+		while (i < cardAmount) {
+			myDeck.getCardAt(0).owner = this;
+			cards.add(myDeck.getCardAt(0));
+			Deck.cards.remove(0);
+			i++;
 		}
-
-		return temp;
 	}
+
+	public abstract String getCardsText();
 
 }
